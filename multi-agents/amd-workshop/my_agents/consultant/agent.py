@@ -1,5 +1,5 @@
 from google.adk.agents import Agent
-from tools_nutrition_local import reload_tsv, lookup_by_name_local
+from .tools_nutrition_local import reload_tsv, lookup_by_name_local
 from google.adk.models.lite_llm import LiteLlm
 import os
 
