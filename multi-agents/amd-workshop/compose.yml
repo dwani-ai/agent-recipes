@@ -1,0 +1,42 @@
+# docker-compose.yml
+version: "3.9"
+
+services:
+  vllm-rocm:
+    image: vllm/vllm-openai-rocm:v0.16.0
+
+    container_name: vllm-qwen3-vl-30b
+
+    # restart: unless-stopped   # uncomment if you want it to auto-restart
+
+    ports:
+      - "8000:8000"
+
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+
+    group_add:
+      - video
+
+    cap_add:
+      - SYS_PTRACE
+
+    security_opt:
+      - seccomp:unconfined
+
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+
+    ipc: host
+
+    command: >
+      --model Qwen/Qwen3-VL-30B-A3B-Instruct-FP8
+      serve
+      --enable-auto-tool-choice
+      --tool-call-parser hermes
+      --trust-remote-code
+      --gpu-memory-utilization 0.45

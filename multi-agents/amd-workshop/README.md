@@ -1,5 +1,19 @@
 AMD - Workshop
 
+```bash
+docker run --rm \
+    --group-add=video \
+    --cap-add=SYS_PTRACE \
+    --security-opt seccomp=unconfined \
+    --device /dev/kfd \
+    --device /dev/dri \
+    -v ~/.cache/huggingface:/root/.cache/huggingface \
+    --env "HF_TOKEN=$HF_TOKEN" \
+    -p 8000:8000 \
+    --ipc=host \
+    vllm/vllm-openai-rocm:v0.16.0 \
+    --model Qwen/Qwen3-0.6B
+```
 
 ### Orchestrator (`Qwen/Qwen3-VL-30B-A3B-Instruct-FP8`) on port **9001**
 
