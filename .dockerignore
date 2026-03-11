@@ -1,5 +1,6 @@
 samples
 chroma_db
+my-embedding-gemma
 __pycache__
 *.pyc
 *.pyo
