@@ -1,5 +1,7 @@
 RAG + Embeds
 
+- https://ai.google.dev/gemma/docs/get_started
+
 - EmbeddedGemma
     - https://ai.google.dev/gemma/docs/embeddinggemma 
 
@@ -11,7 +13,7 @@ RAG + Embeds
 - Install and Run 
 
 ```bash
-pip install -U sentence-transformers git+https://github.com/huggingface/transformers@v4.56.0-Embedding-Gemma-preview accelerate
+pip install -U sentence-transformers git+https://github.com/huggingface/transformers@v4.56.0-Embedding-Gemma-preview accelerate datasets
 ```
 
 ```
