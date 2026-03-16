@@ -6,6 +6,9 @@ setup AI inference
 
 --
 
+- For [GCP Setup](gcp-setup.md) 
+
+
 git clone https://github.com/openclaw/openclaw.git
 
 git checkout 70d7a0854c54c489eaefd56bb406ad885f2b3ea2
