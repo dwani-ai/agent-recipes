@@ -1,9 +1,3 @@
-# Run from this directory:
-#   docker compose -f docker-compose.integrated.yml up --build
-#
-# Set LITELLM_API_BASE=http://llama-server:8080/v1 in .env so adk-web reaches llama-server.
-# Models live under coding_agents/llm_api/models (see volume path below).
-
 services:
   llama-server:
     image: ghcr.io/ggml-org/llama.cpp:server-cuda
@@ -11,7 +5,7 @@ services:
     ports:
       - "80:8080"
     volumes:
-      - ../../coding_agents/llm_api/models:/models
+      - ./models:/models
     deploy:
       resources:
         reservations:
