@@ -1,0 +1,43 @@
+# Run from this directory:
+#   docker compose -f docker-compose.integrated.yml up --build
+#
+# Models live under coding_agents/llm_api/models (see volume path below).
+
+services:
+  llama-server:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    volumes:
+      - ../../coding_agents/llm_api/models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: >
+      --model /models/sarvam-30b-Q4_K_M.gguf-00001-of-00006.gguf
+      --ctx-size 4096
+      --n-gpu-layers 99
+      --host 0.0.0.0
+      --port 8080
+      --jinja
+      --alias gemma3
+      --reasoning-budget 0
+      --chat-template-kwargs "{\"enable_thinking\": false}"
+
+  adk-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      LITELLM_API_BASE: http://llama-server:8080/v1
+    depends_on:
+      - llama-server

@@ -1,0 +1,12 @@
+services:
+  adk-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    # Reach llama.cpp on the host (e.g. coding_agents/llm_api/llama-cpp-sarvam.yml publishing port 80).
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

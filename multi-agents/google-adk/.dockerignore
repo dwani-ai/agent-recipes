@@ -1,0 +1,6 @@
+venv/
+rag-embeds/
+__pycache__/
+**/__pycache__/
+.git/
+.env
