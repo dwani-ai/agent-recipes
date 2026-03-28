@@ -5,8 +5,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    env_file:
-      - .env
-    # Reach llama.cpp on the host (e.g. coding_agents/llm_api/llama-cpp-sarvam.yml publishing port 80).
+    environment:
+      LITELLM_MODEL_NAME: ${LITELLM_MODEL_NAME}
+      LITELLM_API_BASE: ${LITELLM_API_BASE}
+      LITELLM_API_KEY: ${LITELLM_API_KEY}
     extra_hosts:
       - "host.docker.internal:host-gateway"

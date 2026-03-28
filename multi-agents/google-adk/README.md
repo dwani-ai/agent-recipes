@@ -67,7 +67,7 @@ adk web
 The stack runs **ADK web** in a container. There is **no LiteLLM proxy** here: agents use the **LiteLLM library** with `LITELLM_*` environment variables, same as local development.
 
 1. Start your OpenAI-compatible model server first. For the Sarvam llama.cpp setup in this repo, use [coding_agents/llm_api/llama-cpp-sarvam.yml](../../coding_agents/llm_api/llama-cpp-sarvam.yml) (`--alias gemma3`, published on host port **80**).
-2. Copy [.env.example](.env.example) to `.env` and adjust `LITELLM_API_BASE` if your server runs elsewhere (another host, different port, or a URL reachable from Docker).
+2. Copy [.env.example](.env.example) to `.env` with `LITELLM_MODEL_NAME`, `LITELLM_API_BASE`, and `LITELLM_API_KEY`. [docker-compose.yml](docker-compose.yml) passes only those three variables into `adk-web` (no separate LiteLLM config file).
 3. From this directory:
 
    ```bash
@@ -76,16 +76,16 @@ The stack runs **ADK web** in a container. There is **no LiteLLM proxy** here: a
 
 4. Open [http://localhost:8000](http://localhost:8000).
 
-`docker-compose.yml` sets `host.docker.internal` → host gateway so the container can call `http://host.docker.internal:80/v1` on Linux. If the llama server runs in another Docker network, point `LITELLM_API_BASE` at that service URL instead.
+`docker-compose.yml` sets `host.docker.internal` → host gateway so the container can call `http://host.docker.internal:80/v1` on Linux when you set that in `.env`. If the llama server runs in another Docker network, point `LITELLM_API_BASE` at that service URL instead.
 
 **Note:** The ADK loader lists every subdirectory under this folder; `database-tools` is documentation-only and may error if selected in the UI.
 
 ### Integrated: llama.cpp + ADK web
 
-[docker-compose.integrated.yml](docker-compose.integrated.yml) runs **llama-server** (same image, model, and GPU settings as [llama-cpp-sarvam.yml](../../coding_agents/llm_api/llama-cpp-sarvam.yml)) and **adk-web** on one Compose network. ADK uses `LITELLM_API_BASE=http://llama-server:8080/v1` (set in that file; overrides `.env`).
+[docker-compose.integrated.yml](docker-compose.integrated.yml) runs **llama-server** (same image, model, and GPU settings as [llama-cpp-sarvam.yml](../../coding_agents/llm_api/llama-cpp-sarvam.yml)) and **adk-web** on one Compose network. In `.env`, set **`LITELLM_API_BASE=http://llama-server:8080/v1`** (plus `LITELLM_MODEL_NAME` and `LITELLM_API_KEY`); compose passes those three variables into `adk-web` only.
 
 1. Ensure GGUF shards exist under `coding_agents/llm_api/models/` (same layout as the standalone Sarvam compose).
-2. Copy [.env.example](.env.example) to `.env` (you still need `LITELLM_MODEL_NAME` and `LITELLM_API_KEY`; `LITELLM_API_BASE` in `.env` is ignored for this file).
+2. Copy [.env.example](.env.example) to `.env` and set the three `LITELLM_*` values (see example comments for integrated vs host llama).
 3. From **this directory**:
 
    ```bash
