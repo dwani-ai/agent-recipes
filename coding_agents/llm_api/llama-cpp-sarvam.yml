@@ -22,3 +22,5 @@ services:
       --port 8080
       --jinja
       --alias gemma3
+      --reasoning-budget 0
+      --chat-template-kwargs "{\"enable_thinking\": false}"
