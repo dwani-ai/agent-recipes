@@ -1,7 +1,6 @@
 services:
   llama-server:
     image: ghcr.io/ggml-org/llama.cpp:server-cuda
-    container_name: sarvam-30b-server
     restart: unless-stopped
     ports:
       - "80:8080"
@@ -24,3 +23,16 @@ services:
       --alias gemma3
       --reasoning-budget 0
       --chat-template-kwargs "{\"enable_thinking\": false}"
+
+  adk-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      LITELLM_MODEL_NAME: ${LITELLM_MODEL_NAME}
+      LITELLM_API_BASE: ${LITELLM_API_BASE}
+      LITELLM_API_KEY: ${LITELLM_API_KEY}
+    depends_on:
+      - llama-server
