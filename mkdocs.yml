@@ -1,0 +1,45 @@
+site_name: dwani.ai
+site_url: https://agent-recipes.dwani.ai
+repo_url: https://github.com/dwani-ai/agent-recipes
+theme:
+  logo: images/dwani-logo.png
+  favicon: images/dwani-favicon.ico
+  name: material
+  features:
+    - content.action.edit
+    - content.code.copy
+    - content.tabs.link
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - search.share
+    - toc.follow
+    - content.code.copy
+    - content.tabs
+    - content.action
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed
+  - attr_list
+  - md_in_html
+site_dir: site
+plugins:
+  - search
+exclude_docs: |
+  *.py
+  node_modules/
+  *.git
+  venv
+use_directory_urls: false
+nav:
+  - home: index.md
+  - factorio: README.md
+      - envrionment : learning_environment/README.md
+  - adk: google-adk-courses.md
