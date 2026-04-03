@@ -19,7 +19,7 @@ services:
       "--chat-template-content-format", "openai",
       "--trust-remote-code",               
       "--mm-encoder-tp-mode", "data",       
-      "--limit-mm-per-prompt", "image=2,video=1,audio=1", 
+      "--limit-mm-per-prompt", "{\"image\":2,\"video\":1,\"audio\":1}",
       "--reasoning-parser", "gemma4",
       "--default-chat-template-kwargs", "{\"enable_thinking\": false}",
       "--enable-auto-tool-choice",
