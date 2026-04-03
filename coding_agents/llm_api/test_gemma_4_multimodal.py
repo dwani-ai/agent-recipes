@@ -24,7 +24,7 @@ text_response = client.chat.completions.create(
 )
 
 
-"""
+
 # 1. Processing Text + Image
 image_response = client.chat.completions.create(
     model="gemma4",
@@ -34,7 +34,7 @@ image_response = client.chat.completions.create(
             {"type": "text", "text": "What is depicted in this image?"},
             {
                 "type": "image_url",
-                "image_url": {"url": f"data:image/jpeg;base64,{encode_media('scene.jpg')}"}
+                "image_url": {"url": f"data:image/jpeg;base64,{encode_media('media/image.jpg')}"}
             }
         ]
     }]
@@ -50,14 +50,14 @@ audio_response = client.chat.completions.create(
             {
                 "type": "input_audio",
                 "input_audio": {
-                    "data": encode_media("voice_note.wav"),
+                    "data": encode_media("media/kannada_sample.wav"),
                     "format": "wav"
                 }
             }
         ]
     }]
 )
-
+"""
 # 3. Processing Text + Video
 # Note: vLLM expects video via 'video_url' or as a series of frames 
 # depending on your specific vLLM version's implementation of the OpenAI spec.
@@ -75,10 +75,14 @@ video_response = client.chat.completions.create(
     }]
 )
 
-print(f"Image Analysis: {image_response.choices[0].message.content}")
-print(f"Audio Summary: {audio_response.choices[0].message.content}")
+
 print(f"Video Description: {video_response.choices[0].message.content}")
 
 """
 
 print(f"Text Analysis: {text_response.choices[0].message.content}")
+
+
+print(f"Image Analysis: {image_response.choices[0].message.content}")
+
+print(f"Audio Summary: {audio_response.choices[0].message.content}")
