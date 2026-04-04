@@ -18,6 +18,27 @@ vllm serve google/gemma-4-E2B-it \
   --limit-mm-per-prompt image=4,audio=1
 
 
+vllm serve google/gemma-4-E2B-it  \
+  --served-model-name gemma4  \
+  --host 0.0.0.0  \
+  --port 8000  \
+  --gpu-memory-utilization 0.90  \
+  --tensor-parallel-size 1  \
+  --max-model-len 8192 \ 
+  --max-num-seqs 16 \
+  --enable-chunked-prefill \
+  --enable-prefix-caching \
+  --generation-config auto \
+  --enforce-eager \
+  --chat-template-content-format openai \
+  --trust-remote-code  \
+  --mm-encoder-tp-mode data \       
+  --limit-mm-per-prompt image=2,video=1,audio=1 \
+  --reasoning-parser gemma4 \
+  --enable-auto-tool-choice \
+  --tool-call-parser gemma4
+
+
 - Verification
 
 curl http://localhost:8000/v1/chat/completions \
