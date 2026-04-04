@@ -1,6 +1,9 @@
 import base64
 from openai import OpenAI
 import os
+
+# https://docs.vllm.ai/projects/recipes/en/latest/Google/Gemma4.html#audio-transcription-openai-sdk 
+
 # Initialize the client pointing to your vLLM server
 client = OpenAI(
     base_url=os.environ["LITELLM_API_BASE"],  # Port 80 as per your docker-compose
@@ -39,6 +42,7 @@ image_response = client.chat.completions.create(
         ]
     }]
 )
+"""
 
 # 2. Processing Text + Audio (Transcription/Reasoning)
 audio_response = client.chat.completions.create(
@@ -57,7 +61,6 @@ audio_response = client.chat.completions.create(
         ]
     }]
 )
-"""
 # 3. Processing Text + Video
 # Note: vLLM expects video via 'video_url' or as a series of frames 
 # depending on your specific vLLM version's implementation of the OpenAI spec.
@@ -85,4 +88,4 @@ print(f"Text Analysis: {text_response.choices[0].message.content}")
 
 print(f"Image Analysis: {image_response.choices[0].message.content}")
 
-print(f"Audio Summary: {audio_response.choices[0].message.content}")
+#print(f"Audio Summary: {audio_response.choices[0].message.content}")
