@@ -3,11 +3,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     environment:
       LITELLM_MODEL_NAME: ${LITELLM_MODEL_NAME}
       LITELLM_API_BASE: ${LITELLM_API_BASE}
       LITELLM_API_KEY: ${LITELLM_API_KEY}
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  # Public edge: only nginx listens on the host. ADK is not reachable from outside the Docker network.
+  proxy:
+    build:
+      context: ./deploy/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - adk-web
+    environment:
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:-adk}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
+      ALLOW_UNAUTHENTICATED_ACCESS: ${ALLOW_UNAUTHENTICATED_ACCESS:-}
+    restart: unless-stopped
