@@ -62,6 +62,8 @@ To use the ADK web interface for running and inspecting agents:
 adk web
 ```
 
+The loader lists each agent subdirectory **in alphabetical order**. **`0-default-router`** is the default entry app: it sorts first and routes the user to the other example agents (travel, sequence/loop demos, simple chat, loan stub, time tool). You can still pick any other app from the ADK UI.
+
 ## Docker (ADK web only)
 
 The stack runs **ADK web** in a container. There is **no LiteLLM proxy** here: agents use the **LiteLLM library** with `LITELLM_*` environment variables, same as local development.
@@ -74,7 +76,7 @@ The stack runs **ADK web** in a container. There is **no LiteLLM proxy** here: a
    docker compose up --build
    ```
 
-4. Open [http://localhost:8000](http://localhost:8000).
+4. Open [http://localhost:8000](http://localhost:8000). The **`0-default-router`** app should appear first in the app list and open as the default session entry point.
 
 `docker-compose.yml` sets `host.docker.internal` → host gateway so the container can call `http://host.docker.internal:80/v1` on Linux when you set that in `.env`. If the llama server runs in another Docker network, point `LITELLM_API_BASE` at that service URL instead.
 

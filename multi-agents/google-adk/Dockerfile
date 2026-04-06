@@ -13,4 +13,5 @@ COPY . .
 
 EXPOSE 8000
 
+# ADK Web lists apps alphabetically; `0-default-router` sorts first and is the intended default entry app.
 CMD ["adk", "web", "--host", "0.0.0.0", "--port", "8000", "--no-reload", "."]
