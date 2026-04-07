@@ -98,6 +98,29 @@ curl http://localhost:8000/v1/chat/completions \
 curl http://localhost:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
+    "model": "gemma4",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "audio_url", 
+            "audio_url": {"url": "https://github.com/dwani-ai/dwani-python-sdk/raw/refs/heads/main/examples/sample_data/kannada_sample.wav"}
+          },
+          {
+            "type": "text", 
+            "text": "Instruction: Listen to the audio and provide ONLY the final answer in the native script of the language spoken. Do not transcribe or repeat the question.\n\nExample 1 (Kannada):\nAudio: [ಕರ್ನಾಟಕದ ರಾಜಧಾನಿ ಯಾವುದು?]\nAnswer: ಬೆಂಗಳೂರು\n\nExample 2 (Hindi):\nAudio: [भारत की राजधानी क्या है?]\nAnswer: नई दिल्ली\n\nAudio: [Current Audio]\nAnswer:"
+          }
+        ]
+      }
+    ],
+    "temperature": 0.0,
+    "max_tokens": 50
+  }'
+
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
     "model": "google/gemma-4-E2B-it",
     "messages": [
       {
