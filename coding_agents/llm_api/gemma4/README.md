@@ -1,5 +1,8 @@
 docker build -t vllm-gemma4-audio . 
 
+docker compose -f vllm-gemma-4-audio.yml up -d
+
+
 docker run --gpus all \
     -v ~/.cache/huggingface:/root/.cache/huggingface \
     -p 8000:8000 \
