@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y \
 # 2. Install 'uv' directly from the official script
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Ensure uv is in the PATH
+ENV PATH="/root/.local/bin/:$PATH"
+
 # 3. Create a workspace and virtual environment
 WORKDIR /app
 RUN uv venv /app/.venv
