@@ -1,6 +1,6 @@
 services:
   vllm-server:
-    build: .
+    image:  vllm-gemma4-audio
     environment:
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
     command: [

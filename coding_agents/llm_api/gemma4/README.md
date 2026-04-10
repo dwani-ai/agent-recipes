@@ -1,3 +1,7 @@
+docker build -t vllm-gemma4-audio . 
+
+docker compose -f vllm-gemma-4-audio.yml up -d
+
 # Use the latest CUDA 13.0 base (ensure your host driver supports this!)
 FROM nvidia/cuda:13.0.0-devel-ubuntu24.04
 
@@ -18,6 +22,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Ensure uv is in the PATH
 ENV PATH="/root/.local/bin/:$PATH"
+
 # 3. Create a workspace and virtual environment
 WORKDIR /app
 RUN uv venv /app/.venv
@@ -40,3 +45,24 @@ EXPOSE 8000
 # 6. Default Entrypoint (OpenAI API Server)
 # We use 'uv run' or path to venv to ensure we use the correct environment
 ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+
+# 7. Optimized Gemma 4 Launch Arguments
+CMD [ \
+    "--model", "google/gemma-4-E2B-it", \
+    "--served-model-name", "gemma4", \
+    "--host", "0.0.0.0", \
+    "--port", "8000", \
+    "--gpu-memory-utilization", "0.90", \
+    "--tensor-parallel-size", "1", \
+    "--max-model-len", "8192", \
+    "--max-num-seqs", "16", \
+    "--enable-chunked-prefill", \
+    "--enable-prefix-caching", \
+    "--enforce-eager", \
+    "--chat-template-content-format", "openai", \
+    "--trust-remote-code", \
+    "--mm-encoder-tp-mode", "data", \
+    "--limit-mm-per-prompt", "image=2,video=1,audio=1", \
+    "--reasoning-parser", "gemma4", \
+    "--tool-call-parser", "gemma4" \
+]

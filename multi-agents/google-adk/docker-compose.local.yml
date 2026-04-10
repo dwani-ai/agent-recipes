@@ -1,0 +1,11 @@
+# Optional override: expose ADK on localhost:8000 without nginx (development only).
+# Usage: docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+#
+# The proxy service uses a profile that is never enabled, so it is not started.
+services:
+  adk-web:
+    ports:
+      - "8000:8000"
+  proxy:
+    profiles:
+      - proxy_not_used_locally

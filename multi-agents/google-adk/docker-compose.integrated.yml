@@ -28,11 +28,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     environment:
       LITELLM_MODEL_NAME: ${LITELLM_MODEL_NAME}
       LITELLM_API_BASE: ${LITELLM_API_BASE}
       LITELLM_API_KEY: ${LITELLM_API_KEY}
     depends_on:
       - llama-server
+    restart: unless-stopped
+
+  # ADK UI behind nginx (port 8081) — llama HTTP API stays on host port 80.
+  proxy:
+    build:
+      context: ./deploy/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    depends_on:
+      - adk-web
+    environment:
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:-adk}
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
+      ALLOW_UNAUTHENTICATED_ACCESS: ${ALLOW_UNAUTHENTICATED_ACCESS:-}
+    restart: unless-stopped

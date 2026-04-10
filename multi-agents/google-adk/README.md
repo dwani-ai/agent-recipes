@@ -62,27 +62,43 @@ To use the ADK web interface for running and inspecting agents:
 adk web
 ```
 
+The loader lists each agent subdirectory **in alphabetical order**. **`0-default-router`** is the default entry app: it sorts first and routes the user to the other example agents (travel, sequence/loop demos, simple chat, loan stub, time tool). You can still pick any other app from the ADK UI.
+
 ## Docker (ADK web only)
 
-The stack runs **ADK web** in a container. There is **no LiteLLM proxy** here: agents use the **LiteLLM library** with `LITELLM_*` environment variables, same as local development.
+The stack runs **ADK web** behind **nginx** on **port 80**. The ADK process is **not** published on the host; only nginx listens on `80`. There is **no LiteLLM proxy** here: agents use the **LiteLLM library** with `LITELLM_*` environment variables, same as local development.
 
 1. Start your OpenAI-compatible model server first. For the Sarvam llama.cpp setup in this repo, use [coding_agents/llm_api/llama-cpp-sarvam.yml](../../coding_agents/llm_api/llama-cpp-sarvam.yml) (`--alias gemma3`, published on host port **80**).
-2. Copy [.env.example](.env.example) to `.env` with `LITELLM_MODEL_NAME`, `LITELLM_API_BASE`, and `LITELLM_API_KEY`. [docker-compose.yml](docker-compose.yml) passes only those three variables into `adk-web` (no separate LiteLLM config file).
+2. Copy [.env.example](.env.example) to `.env` and set `LITELLM_MODEL_NAME`, `LITELLM_API_BASE`, `LITELLM_API_KEY`, and **`BASIC_AUTH_PASSWORD`** (plus optional `BASIC_AUTH_USER`). HTTP Basic Auth is enforced by nginx unless you set **`ALLOW_UNAUTHENTICATED_ACCESS=true`** (development only — do not use on a public internet-facing VM).
 3. From this directory:
 
    ```bash
    docker compose up --build
    ```
 
-4. Open [http://localhost:8000](http://localhost:8000).
+4. Open `http://localhost` (port **80**). Sign in with the basic-auth user and password from `.env`. The **`0-default-router`** app should appear first in the app list and open as the default session entry point.
+
+**Local development without nginx** (ADK exposed on `8000` only, no basic auth at the proxy):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+```
 
 `docker-compose.yml` sets `host.docker.internal` → host gateway so the container can call `http://host.docker.internal:80/v1` on Linux when you set that in `.env`. If the llama server runs in another Docker network, point `LITELLM_API_BASE` at that service URL instead.
 
 **Note:** The ADK loader lists every subdirectory under this folder; `database-tools` is documentation-only and may error if selected in the UI.
 
+### Securing deployment on a GCP VM (port 80)
+
+- **Access control:** Prefer **HTTPS** in front of this stack (Google Cloud Load Balancer with managed certificates, or Caddy / Certbot on the VM) so credentials and traffic are not sent in cleartext. Port 80 alone is convenient but not encrypted.
+- **Firewall:** In [VPC firewall rules](https://cloud.google.com/vpc/docs/firewalls), restrict **tcp:80** (and **tcp:443** if you terminate TLS) to trusted CIDR ranges, [Identity-Aware Proxy](https://cloud.google.com/iap/docs/concepts-overview) TCP forwarding, or a known bastion — avoid `0.0.0.0/0` unless you must and have other controls (Cloud Armor, OAuth proxy, etc.).
+- **Secrets:** Store `BASIC_AUTH_PASSWORD` and `LITELLM_API_KEY` in [Secret Manager](https://cloud.google.com/secret-manager) or another secret store; inject at runtime — do not commit real `.env` files.
+- **SSH:** Use OS Login or key-based SSH; keep port **22** restricted similarly.
+- **Updates:** Keep the VM image, Docker, and base images patched.
+
 ### Integrated: llama.cpp + ADK web
 
-[docker-compose.integrated.yml](docker-compose.integrated.yml) runs **llama-server** (same image, model, and GPU settings as [llama-cpp-sarvam.yml](../../coding_agents/llm_api/llama-cpp-sarvam.yml)) and **adk-web** on one Compose network. In `.env`, set **`LITELLM_API_BASE=http://llama-server:8080/v1`** (plus `LITELLM_MODEL_NAME` and `LITELLM_API_KEY`); compose passes those three variables into `adk-web` only.
+[docker-compose.integrated.yml](docker-compose.integrated.yml) runs **llama-server** (same image, model, and GPU settings as [llama-cpp-sarvam.yml](../../coding_agents/llm_api/llama-cpp-sarvam.yml)) and **adk-web** behind **nginx** on one Compose network. In `.env`, set **`LITELLM_API_BASE=http://llama-server:8080/v1`** (plus `LITELLM_MODEL_NAME` and `LITELLM_API_KEY`), and the same **`BASIC_AUTH_*`** (or dev-only **`ALLOW_UNAUTHENTICATED_ACCESS`**) as the main compose file.
 
 1. Ensure GGUF shards exist under `coding_agents/llm_api/models/` (same layout as the standalone Sarvam compose).
 2. Copy [.env.example](.env.example) to `.env` and set the three `LITELLM_*` values (see example comments for integrated vs host llama).
@@ -92,7 +108,7 @@ The stack runs **ADK web** in a container. There is **no LiteLLM proxy** here: a
    docker compose -f docker-compose.integrated.yml up --build
    ```
 
-4. ADK web: [http://localhost:8000](http://localhost:8000). Llama HTTP API (host): [http://localhost:80](http://localhost:80) (same as the standalone Sarvam stack).
+4. ADK web (behind nginx, with the same `BASIC_AUTH_*` / `ALLOW_UNAUTHENTICATED_ACCESS` rules as above): [http://localhost:8081](http://localhost:8081). Llama HTTP API (host): [http://localhost:80](http://localhost:80) (same as the standalone Sarvam stack).
 
 ## References
 
