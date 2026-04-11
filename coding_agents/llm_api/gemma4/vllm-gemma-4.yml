@@ -1,6 +1,6 @@
 services:
   vllm-server:
-    image: vllm-gemma4-audio
+    image: dwani/vllm-gemma4-audio
     container_name: gemma4-vllm-server-1
     # CRITICAL: L4 GPUs need shared memory for Triton/NCCL kernels to initialize without hanging.
     shm_size: '4gb'
