@@ -3,6 +3,8 @@ services:
     image:  vllm-gemma4-audio
     environment:
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+      # From host: export HF_TOKEN=... or add to .env (same dir as compose). Speeds downloads and avoids HF throttling.
+      HF_TOKEN: ${HF_TOKEN:-} # Add your Hugging Face token here
     command: [
       "--model", "google/gemma-4-E2B-it",
       "--served-model-name", "gemma4",
@@ -17,8 +19,7 @@ services:
       "--generation-config", "auto",
       "--enforce-eager",
       "--chat-template-content-format", "openai",
-      "--trust-remote-code",               
-      "--mm-encoder-tp-mode", "data",       
+      "--trust-remote-code",
       "--limit-mm-per-prompt", "{\"image\":2,\"video\":1,\"audio\":1}",
       "--reasoning-parser", "gemma4",
       "--default-chat-template-kwargs", "{\"enable_thinking\": false}",
