@@ -9,6 +9,7 @@ Experiments and recipes for AI agents: multi-agent systems, code-execution sandb
 | **[Multi-agent systems (Google ADK)](multi-agents/google-adk/README.md)** | Examples built with Google's Agent Development Kit — sub-agents, sequence agents, loop agents — using LiteLLM for inference. |
 | **[Coding agents + sandbox](coding_agents/README.md)** | Agent harness that reformulates questions as coding problems, generates code (e.g. Qwen3-Coder), and runs it in a sandboxed environment with resource limits. |
 | **[Factorio](factorio/README.md)** | Agentic system that plays Factorio. See the Factorio README for setup. |
+| **[OpenClaw + dwani](multi-agents/openclaw//README.md)** | OpenClaw + dwani for Kannada. See the OpenClaw README for setup. |
 
 ## Coding agents: sandbox in action
 

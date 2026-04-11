@@ -2,7 +2,10 @@ OpenClaw
 
 --
 setup AI inference
-  - docker compose -f vllm-qwen-3_5.yml up -d
+  - vLLM
+    - docker compose -f vllm-qwen-3_5.yml up -d
+  - llama-cpp
+    - docker compose -f qwen-openclaw-llama-cpp.yml up -d
 
 --
 
