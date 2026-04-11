@@ -1,4 +1,5 @@
-# Use the latest CUDA 13.0 base (ensure your host driver supports this!)
+# CUDA 13.0 on Ubuntu 24.04 (Noble). Do not use ubuntu22.04 here: Jammy's default apt has no python3.12.
+# (On 22.04 you would need the deadsnakes PPA or a different Python install path.)
 FROM nvidia/cuda:13.0.0-devel-ubuntu24.04
 
 # Set system environment variables
@@ -10,7 +11,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 # 1. Install system dependencies
 RUN apt-get update && apt-get install -y \
-    python3.12 python3-pip curl git ffmpeg libsndfile1 \
+    python3.12 python3.12-venv python3-pip curl git ffmpeg libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Install 'uv' directly from the official script
